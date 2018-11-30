@@ -1,11 +1,11 @@
 
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'circle/cli/version'
+require 'circle_cli/version'
 
 Gem::Specification.new do |spec|
   spec.name          = 'circle-cli'
-  spec.version       = Circle::Cli::VERSION
+  spec.version       = CircleCli::VERSION
   spec.authors       = ['Oliver Switzer']
   spec.email         = ['oliver@kickstarter.com']
 
@@ -23,14 +23,19 @@ Gem::Specification.new do |spec|
       'public gem pushes.'
   end
 
-  spec.files         = `git ls-files -z`.split('\x0').reject do |f|
+  spec.files         = `git ls-files -z`.split("\x0").reject do |f|
     f.match(%r{^(test|spec|features)/})
   end
-  spec.bindir        = 'exe'
-  spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
+  spec.bindir        = 'bin'
+  spec.executables   = ['circlecli']
   spec.require_paths = ['lib']
 
   spec.add_development_dependency 'bundler', '~> 1.16'
   spec.add_development_dependency 'rake', '~> 10.0'
   spec.add_development_dependency 'rspec', '~> 3.0'
+  spec.add_development_dependency 'pry', '~> 0.10.4'
+
+  spec.add_runtime_dependency 'json', '~> 2.1', '>= 2.1.0'
+  spec.add_runtime_dependency 'http', '~> 4.0', '>= 4.0.0'
+  spec.add_runtime_dependency 'dotenv', '~> 2.5', '>= 2.5.0'
 end
