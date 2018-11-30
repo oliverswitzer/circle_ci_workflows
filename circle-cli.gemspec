@@ -35,7 +35,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'rspec', '~> 3.0'
   spec.add_development_dependency 'pry', '~> 0.10.4'
 
-  spec.add_runtime_dependency 'json', '~> 2.1', '>= 2.1.0'
-  spec.add_runtime_dependency 'http', '~> 4.0', '>= 4.0.0'
-  spec.add_runtime_dependency 'dotenv', '~> 2.5', '>= 2.5.0'
+  spec.add_runtime_dependency 'json'
+  spec.add_runtime_dependency 'http'
+  spec.add_runtime_dependency 'thor'
 end

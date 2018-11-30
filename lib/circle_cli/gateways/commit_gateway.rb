@@ -1,9 +1,13 @@
 # frozen_string_literal: true
 
+require 'json'
+require 'http'
+
 module CircleCli
   module Gateways
     class CommitGateway
-      def initialize(owner:, github_repo:)
+      def initialize(owner:, github_repo:, api_token:)
+        @api_token = api_token
         @owner = owner
         @github_repo = github_repo
       end
@@ -12,13 +16,13 @@ module CircleCli
         all_jobs = fetch_jobs(branch: branch)
 
         if all_jobs.empty?
-          puts "No jobs found for github.com/#{owner}/#{repo} - #{branch}"
+          puts "No jobs found for github.com/#{@owner}/#{@github_repo} - #{branch}"
           exit(-1)
         end
 
         committer_date = all_jobs.first['committer_date']
 
-        Commit.new(
+        Core::Entities::Commit.new(
           date: Time.parse(committer_date).strftime("%h %d %H:%M"),
           author: all_jobs.first['user']['login'],
           revision: all_jobs.first['vcs_revision'],
@@ -37,7 +41,7 @@ module CircleCli
       end
 
       private def extract_job(circle_job)
-        Job.new(
+        Core::Entities::Job.new(
           name: circle_job['job_name'] || circle_job['workflows']['job_name'],
           status: circle_job['status'],
           queued_at: circle_job['queued_at'],
@@ -57,13 +61,12 @@ module CircleCli
       end
 
       private def fetch_jobs(branch:)
-        token = ENV.fetch("CIRCLE_CI_TOKEN") { puts "CIRCLE_CI_TOKEN is not defined. Please add it to .env"; exit(-1) }
         api_url = "https://circleci.com/api/v1.1/project/github/#{@owner}/#{@github_repo}/tree/#{branch}"
 
         JSON.parse(
           HTTP
             .headers('Accept' => "application/json")
-            .basic_auth(user: token, pass: "")
+            .basic_auth(user: @api_token, pass: "")
             .get(api_url).to_s
         )
       end

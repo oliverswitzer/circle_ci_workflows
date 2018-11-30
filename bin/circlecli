@@ -3,4 +3,4 @@
 require 'bundler/setup'
 require 'circle_cli/app'
 
-CircleCli::App.new.run
+CircleCli::App.start
