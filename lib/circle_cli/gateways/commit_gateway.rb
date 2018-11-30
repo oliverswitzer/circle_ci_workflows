@@ -55,8 +55,10 @@ module CircleCli
           circle_job['build_time_millis'].to_i / 1000
         elsif circle_job['queued_at']
           (Time.now - Time.parse(circle_job['queued_at'])).to_i
-        else
+        elsif circle_job['start_at']
           (Time.now - Time.parse(circle_job['start_at'])).to_i
+        else
+          0
         end
       end
 
